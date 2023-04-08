@@ -1,0 +1,63 @@
+name: Docs
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - 'motion-canvas-presentation/**'
+
+jobs:
+  build:
+    name: Build & Publish 🚀
+    runs-on: ubuntu-latest
+    env:
+      INPUTPATH: docs
+      OUTPUTPATH: dist
+      SLIDES: true
+      BRANCH: gh-pages
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build
+        uses: quirinecker/asciidoctor-convert-action@main
+        with:
+          slides: ${{ env.SLIDES }}
+          inputPath: ${{ env.INPUTPATH }}
+          outputPath: ${{ env.OUTPUTPATH }}
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Check Versions
+        run: npm -v && node -v
+
+      - name: Build Motion-Canvas 🎨
+        run: |
+          cd motion-canvas-presentation/
+          npm install
+          npm run build
+
+      - name: Copy HTML-Motion-Canvas 🎨
+        run: |
+          pwd
+          cp  ./motion-canvas-presentation/motion-canvas.html ./motion-canvas-presentation/dist/
+          ls -la ./motion-canvas-presentation/dist/
+
+      - name: Fix Img & Video Paths in compiled JS 🔧
+        run: |
+          cd ./motion-canvas-presentation/dist/
+          for FILE in $(ls -I "*.js" -I "*.html"); do sed -i "s|/${FILE}|./${FILE}|g" ./project.js; echo "${FILE}"; done;
+
+      - name: Move to dist 🎨
+        run: sudo mv ./motion-canvas-presentation/dist/* ./dist/
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ github.TOKEN }}
+          BRANCH: ${{ env.BRANCH }}
+          FOLDER: ${{ env.OUTPUTPATH }}

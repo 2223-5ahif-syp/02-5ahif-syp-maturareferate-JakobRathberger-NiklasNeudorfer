@@ -1,0 +1,8 @@
+### GET
+GET {{url}}/example
+Accept: application/json
+
+### POST
+POST {{url}}/example
+
+ExampleName2

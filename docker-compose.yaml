@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  gh-actions-demo-db:
+    container_name: gh-actions-demo-db
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=app
+      - POSTGRES_PASSWORD=app
+    ports:
+      - '5432:5432'
+    volumes:
+      - gh-actions-demo-db:/var/lib/postgresql/data
+  gh-actions-demo:
+    container_name: gh-actions-demo
+    image: ghcr.io/jakobrathberger/gh-action-demo:latest
+    environment:
+      - quarkus_datasource_jdbc_url=jdbc:postgresql://gh-actions-demo-db:5432/postgres
+    ports:
+      - '8080:8080'
+volumes:
+  gh-actions-demo-db:

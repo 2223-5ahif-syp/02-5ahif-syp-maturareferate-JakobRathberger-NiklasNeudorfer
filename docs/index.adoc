@@ -1,0 +1,179 @@
+= GH-Actions
+ifndef::imagesdir[:imagesdir: .]
+//:toc-placement!:
+:sourcedir: .
+:icons: font
+:sectnums:
+:toc: left
+
+//Need this blank line after ifdef, don't know why...
+ifdef::backend-html5[]
+
+// print the toc here (not at the default position)
+//toc::[]
+
+== Problem
+
+Manually
+
+** testing, building and deploying applications or
+** ensuring code quality (linting, formatting)
+
+is a lot of work and specific steps like testing or formatting can be forgotten.
+//vllt nu a bsp wos ohne gh actions ziemloich scheiße is
+
+== Solution (GitHub-Actions)
+=== What it is?
+
+GitHub Actions enables you to add Workflows or pipelines to your repository.
+These define a sequence of tasks to be executed automatically whenever a certain event occurs,
+such as a push to a Git repository or a pull request.
+
+== Concepts
+=== Continuous Integration (CI)
+
+Continuous integration validates changes to an application
+by building it and running tests against it.
+This makes integration easier by checking if the new change is not
+breaking the application.
+
+=== Continuous Delivery (CD)
+
+Continuous delivery is an extension to continuous integration.
+It adds a step that automatically deploys
+an application to a test/staging environment.
+
+=== Continuous Deployment (CD)
+
+Continuous deployment is an extension to continuous delivery.
+It adds a step that automatically deploys
+an application to a production environment.
+
+== Alternatives
+
+* Jenkins (Open-Source)
+** Pro
+*** Can be hosted local
+*** Jenkins is a highly flexible tool that can be customized to suit specific needs. It supports various plugins and integrations with other tools.
+** Con
+*** Due to local hosting, disruptions can more easily occur, and scaling is also not as simple
+* BitBucket Pipelines
+* GitLab CI/CD
+
+=== Why GitHub-Actions
+
+* Pro
+** GitHub Actions is fully integrated with GitHub, which makes it easy to set up and use
+** GitHub Actions can scale easily to support large and complex workflows
+* Con
+** GitHub Actions is not as flexible as Jenkins, and some workflows may require workarounds to implement.
+** The dependence of GitHub Actions on GitHub itself and the potential for it to become a paid service in the future are potential cons of the tool.
+
+== Example of using GitHub-Actions
+
+In this example a quarkus app with a postgres database
+will be tested, built and deployed.
+
+=== Testing the App
+
+[source,yaml]
+----
+name: build-and-push
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main // <1>
+
+jobs:
+  tests:
+    name: Test
+    runs-on: ubuntu-latest
+
+    // <2>
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: app
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository // <3>
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17 // <4>
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Run Tests // <5>
+        run: ./mvnw test
+----
+
+<1> This job will run when someone pushes to main or a pull_request is updated
+<2> This will start a postgres inside a docker container which can be used
+for testing our quarkus app.
+<3> This will clone the repository
+<4> Set up the JDK so the tests can run.
+This will also cache the maven packages so they do not need to be downloaded every time.
+<5> Run the tests
+
+=== Building and Push
+
+[source,yaml]
+----
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository // <1>
+        uses: actions/checkout@v3
+
+      - name: Setup Docker Buildx // <2>
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GHCR // <3>
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN  }}
+
+      - name: Set up JDK 17 // <4>
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Package // <5>
+        run: ./mvnw clean package -DskipTests
+
+      - name: Build and push images // <6>
+        uses: docker/build-push-action@v3
+        with:
+          context: ./
+          file: ./src/main/docker/Dockerfile.jvm
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ env.IMAGE_NAME }}:latest
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache // <7>
+          cache-to: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache,mode=max // <7>
+----
+<1> Clone the repository
+<2> Setup Docker Buildx to use the features by Moby BuildKit builder toolkit
+<3> Login to the GitHub Docker Registry to be able to push to it
+<4> Set up JDK 17 and cache the maven packages
+<5> Package the quarkus app
+<6> Build the container and push it
+<7> Cache the build so it is faster when rebuilding unchanged steps
