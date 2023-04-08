@@ -7,7 +7,7 @@ on:
       - main
 
 env:
-  IMAGE_NAME: ghcr.io/2223-5ahif-syp/02-5ahif-syp-maturareferate-JakobRathberger-NiklasNeudorfer/gh-action-demo
+  IMAGE_NAME: ghcr.io/2223-5ahif-syp/02-5ahif-syp-maturareferate-jakobrathberger-niklasneudorfer/gh-action-demo
 
 jobs:
   build:
