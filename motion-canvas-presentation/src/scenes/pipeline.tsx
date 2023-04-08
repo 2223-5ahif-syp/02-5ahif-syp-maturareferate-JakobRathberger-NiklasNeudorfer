@@ -24,9 +24,6 @@ export const ColorPalette = {
 
 
 export default makeScene2D(function* (view) {
-
-    view.fill("white")
-
     const fullDiagram = createRef<Node>()
 
     // -----------------------------------------------
@@ -35,14 +32,8 @@ export default makeScene2D(function* (view) {
     const headingText = createRef<Txt>();
 
     view.add(
-        <>
-            <Rect fill={"black"} height={()=> view.height()} width={() => view.width()} radius={70}>
-
-            </Rect>
-
-            <Txt ref={headingText} fontSize={120} fontFamily={"Fira Code"}
-                 y={() => view.height() / -2 + 200} zIndex={100} fill={"white"}/>
-        </>
+        <Txt ref={headingText} fontSize={120} fontFamily={"Fira Code"}
+             y={() => view.height() / -2 + 200} zIndex={100} fill={"white"}/>
     )
 
     // -----------------------------------------------
@@ -321,13 +312,13 @@ export default makeScene2D(function* (view) {
                 boundingBox2().opacity(1, 1),
                 boundingBox2().sharpness(2.5, 1),
                 boundingBox2().nodes([buildSquare(), stageText()], 2),
-                delivText().text("Continuous Delivery",2)
+                delivText().text("Continuous Delivery", 2)
             ),
             all(
                 boundingBox3().opacity(1, 1),
                 boundingBox3().sharpness(3, 1),
                 boundingBox3().nodes([buildSquare(), productionText()], 2),
-                deployText().text("Continuous Deployment",2)
+                deployText().text("Continuous Deployment", 2)
             )
         )
     )
