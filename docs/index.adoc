@@ -1,5 +1,5 @@
 = GH-Actions
-ifndef::imagesdir[:imagesdir: ./imgs]
+ifndef::imagesdir[:imagesdir: .]
 //:toc-placement!:
 :sourcedir: .
 :icons: font
