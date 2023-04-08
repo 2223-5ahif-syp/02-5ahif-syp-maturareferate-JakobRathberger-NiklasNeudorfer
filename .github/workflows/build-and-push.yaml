@@ -7,7 +7,7 @@ on:
       - main
 
 env:
-  IMAGE_NAME: ghcr.io/jakobrathberger/gh-action-demo
+  IMAGE_NAME: ghcr.io/2223-5ahif-syp/gh-action-demo
 
 jobs:
   build:
