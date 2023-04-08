@@ -30,6 +30,9 @@ These define a sequence of tasks to be executed automatically whenever a certain
 such as a push to a Git repository or a pull request.
 
 == Concepts
+
+image::img/cicd-concepts.png[]
+
 === Continuous Integration (CI)
 
 Continuous integration validates changes to an application
