@@ -8,6 +8,7 @@ on:
 
 env:
   IMAGE_NAME: ghcr.io/2223-5ahif-syp/gh-action-demo
+  REPO_NAME: 02-5ahif-syp-maturareferate-JakobRathberger-NiklasNeudorfer
 
 jobs:
   build:
@@ -78,3 +79,34 @@ jobs:
 
       - name: Run Tests
         run: ./mvnw test
+
+  deploy:
+    name: deploy
+    needs: [ build, tests ]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: convert github repository name to lowercase
+        run: echo "IMAGE_REPOSITORY=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - name: install ssh key
+        uses: caberger/install-ssh-key@v1.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_SERVER_PRIVATE_KEY }}
+          user: ${{ secrets.SERVER_USER }}
+          server: ${{ secrets.SERVER }}
+          alias: server
+
+      - name: enable ssh login for debugging...
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug == 'enabled' }}
+
+      - name: deploy to server
+        run: |
+          ls -al
+          ssh server "sudo rm -rf ~/${{ env.REPO_NAME }}/docker-compose.yml"
+          scp docker-compose.yml server:~/${{ env.REPO_NAME }}
+          ssh server "cd ~/${{ env.REPO_NAME }} && echo ${{ secrets.REGISTRY_ACCESS_TOKEN }} | sudo docker login ghcr.io -u ${{ github.actor }} --password-stdin && sudo docker-compose pull"
+          ssh server "cd ~/${{ env.REPO_NAME }} && sudo docker-compose up -d"
