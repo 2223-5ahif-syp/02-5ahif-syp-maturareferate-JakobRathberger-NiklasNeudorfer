@@ -86,31 +86,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-
-      - name: convert github repository name to lowercase
-        run: echo "IMAGE_REPOSITORY=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+      - uses: actions/checkout@v3
 
       - name: install ssh key
-        uses: caberger/install-ssh-key@v1.0
+        uses: webfactory/ssh-agent@v0.4.1
         with:
           ssh-private-key: ${{ secrets.SSH_SERVER_PRIVATE_KEY }}
-          user: ${{ secrets.SERVER_USER }}
-          server: ${{ secrets.SERVER }}
-          alias: server
 
-      - name: enable ssh login for debugging...
-        uses: mxschmitt/action-tmate@v3
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug == 'enabled' }}
+      - name: create .ssh/known_hosts
+        run: ssh-keyscan -H -t rsa -v ${{ secrets.SERVER }}  >> ~/.ssh/known_hosts
 
       - name: test ssh
         run: |
-          ssh server "ls"
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER }} "ls"
 
-      - name: deploy to server
+      - name: Copy required files
         run: |
-          ls -al
-          ssh server "sudo rm -rf ~/${{ env.REPO_NAME }}/docker-compose.yml"
-          scp docker-compose.yml server:~/${{ env.REPO_NAME }}
-          ssh server "cd ~/${{ env.REPO_NAME }} && echo  ${{ secrets.GITHUB_TOKEN  }} | sudo docker login ghcr.io -u  ${{ github.repository_owner }} --password-stdin && sudo docker-compose pull"
-          ssh server "cd ~/${{ env.REPO_NAME }} && sudo docker-compose up -d"
+          scp -r docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER }}:/opt/docker/gh-actions-demo
+
+      - name: Run Docker Container
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER }} "
+          cd /opt/docker/gh-actions-demo
+          echo ${{ github.token }} | docker login https://docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+          docker compose pull
+          docker compose stop
+          docker compose rm -f
+          docker compose up -d
+          "
