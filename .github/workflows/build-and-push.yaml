@@ -102,7 +102,7 @@ jobs:
 
       - name: Copy required files
         run: |
-          scp -r docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER }}:/opt/docker/gh-actions-demo
+          scp -r docker-compose.yaml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER }}:/opt/docker/gh-actions-demo
 
       - name: Run Docker Container
         run: |
