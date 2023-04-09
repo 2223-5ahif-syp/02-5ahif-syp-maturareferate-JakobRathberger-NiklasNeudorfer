@@ -102,12 +102,12 @@ jobs:
 
       - name: Copy required files
         run: |
-          scp -r docker-compose.yaml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER }}:/home/gh-actions-demo
+          scp -r docker-compose.yaml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER }}:/home/${{ secrets.SERVER_USER }}/gh-actions-demo
 
       - name: Run Docker Container
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER }} "
-          cd /home/gh-actions-demo
+          cd /home/${{ secrets.SERVER_USER }}/gh-actions-demo
           echo ${{ github.token }} | docker login https://docker.pkg.github.com -u ${{ github.actor }} --password-stdin
           docker compose pull
           docker compose stop
