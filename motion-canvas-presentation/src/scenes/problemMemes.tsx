@@ -3,7 +3,7 @@ import withoutCICDImage from "../../images/withoutCICD.png";
 import "@motion-canvas/core/lib/types/Color"
 import {makeScene2D} from "@motion-canvas/2d";
 import {Img} from "@motion-canvas/2d/lib/components";
-import {all, waitFor} from "@motion-canvas/core/lib/flow";
+import {all} from "@motion-canvas/core/lib/flow";
 import {slideTransition} from "@motion-canvas/core/lib/transitions";
 import {Direction} from "@motion-canvas/core/lib/types";
 import {beginSlide, createRef} from "@motion-canvas/core/lib/utils";

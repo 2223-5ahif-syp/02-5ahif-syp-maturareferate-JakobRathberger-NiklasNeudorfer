@@ -7,7 +7,8 @@ import solution from "./scenes/solution?scene";
 import problem from "./scenes/problem?scene";
 import problemMemes from "./scenes/problemMemes?scene";
 import pipeline from "./scenes/pipeline?scene";
+import deplYmlExpl from "./scenes/deploy-yaml-expl?scene";
 
 export default makeProject({
-    scenes: [logo, problem, problemMemes, solution, pipeline, components]
+    scenes: [logo, problem, problemMemes, solution, pipeline, components, deplYmlExpl]
 });

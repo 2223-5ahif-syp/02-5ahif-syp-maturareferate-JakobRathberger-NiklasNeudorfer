@@ -4,8 +4,6 @@ import {all} from '@motion-canvas/core/lib/flow';
 import {Circle, Line, Node, Rect, Txt} from "@motion-canvas/2d/lib/components";
 import {easeInCubic} from "@motion-canvas/core/lib/tweening";
 import {createSignal} from "@motion-canvas/core/lib/signals";
-import {slideTransition} from "@motion-canvas/core/lib/transitions";
-import {Direction} from "@motion-canvas/core/lib/types";
 import "@motion-canvas/core/lib/types/Color"
 
 export default makeScene2D(function* (view) {

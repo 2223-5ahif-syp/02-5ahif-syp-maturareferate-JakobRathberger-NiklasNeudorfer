@@ -4,8 +4,8 @@ import jenkinsImg from "../../images/jenkins.png";
 import ghActionsImg from "../../images/githubActions.png";
 import "@motion-canvas/core/lib/types/Color"
 import {makeScene2D} from "@motion-canvas/2d";
-import {Circle, Img, Layout, Line, Rect, Txt} from "@motion-canvas/2d/lib/components";
-import {all, waitFor} from "@motion-canvas/core/lib/flow";
+import {Img, Line, Rect, Txt} from "@motion-canvas/2d/lib/components";
+import {all} from "@motion-canvas/core/lib/flow";
 import {slideTransition} from "@motion-canvas/core/lib/transitions";
 import {Direction} from "@motion-canvas/core/lib/types";
 import {beginSlide, createRef} from "@motion-canvas/core/lib/utils";

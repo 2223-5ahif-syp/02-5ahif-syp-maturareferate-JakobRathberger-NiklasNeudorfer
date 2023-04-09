@@ -5,13 +5,12 @@ import deployStagingImg from "../../images/deployStaging.svg";
 import testImg from "../../images/test.png";
 import "@motion-canvas/core/lib/types/Color"
 import {makeScene2D} from "@motion-canvas/2d";
-import {Circle, Img, Line, Rect, Txt, Node} from "@motion-canvas/2d/lib/components";
+import {Circle, Img, Line, Node, Rect, Txt} from "@motion-canvas/2d/lib/components";
 import {all, chain, sequence, waitFor} from "@motion-canvas/core/lib/flow";
 import {slideTransition} from "@motion-canvas/core/lib/transitions";
 import {Direction} from "@motion-canvas/core/lib/types";
 import {beginSlide, createRef} from "@motion-canvas/core/lib/utils";
 import {Brace, SurroundingRectangle} from '@ksassnowski/motion-canvas-components';
-import {createSignal} from "@motion-canvas/core/lib/signals";
 import "../global.css"
 
 export const ColorPalette = {
@@ -304,19 +303,19 @@ export default makeScene2D(function* (view) {
             1.5,
             all(
                 boundingBox1().opacity(1, 1),
-                boundingBox1().sharpness(2, 1),
+                boundingBox1().sharpness(2, 2),
                 boundingBox1().nodes([buildSquare(), testText()], 2),
                 integText().text("Continuous Integration", 2)
             ),
             all(
                 boundingBox2().opacity(1, 1),
-                boundingBox2().sharpness(2.5, 1),
+                boundingBox2().sharpness(2.5, 2),
                 boundingBox2().nodes([buildSquare(), stageText()], 2),
                 delivText().text("Continuous Delivery", 2)
             ),
             all(
                 boundingBox3().opacity(1, 1),
-                boundingBox3().sharpness(3, 1),
+                boundingBox3().sharpness(3, 2),
                 boundingBox3().nodes([buildSquare(), productionText()], 2),
                 deployText().text("Continuous Deployment", 2)
             )

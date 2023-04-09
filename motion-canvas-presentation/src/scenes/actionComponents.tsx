@@ -1,8 +1,8 @@
 import {makeScene2D} from "@motion-canvas/2d";
-import {Circle, Layout, Line, Rect, Txt, Node, RectProps, CircleProps} from "@motion-canvas/2d/lib/components";
+import {Circle, CircleProps, Layout, Line, Node, Rect, RectProps, Txt} from "@motion-canvas/2d/lib/components";
 import {beginSlide, createRef, range} from "@motion-canvas/core/lib/utils";
 import {easeInCubic} from "@motion-canvas/core/lib/tweening";
-import {all, chain, waitFor} from "@motion-canvas/core/lib/flow";
+import {all, chain} from "@motion-canvas/core/lib/flow";
 import {createSignal} from "@motion-canvas/core/lib/signals";
 import {slideTransition} from "@motion-canvas/core/lib/transitions";
 import {Direction} from "@motion-canvas/core/lib/types";

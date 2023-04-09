@@ -1,20 +1,10 @@
 import {makeScene2D} from "@motion-canvas/2d";
 import {Circle, Line, Node, Txt} from "@motion-canvas/2d/lib/components";
-import {all, chain, waitFor} from "@motion-canvas/core/lib/flow";
+import {all, chain} from "@motion-canvas/core/lib/flow";
 import {beginSlide, createRef, range} from "@motion-canvas/core/lib/utils";
 import "@motion-canvas/core/lib/types/Color"
-import {
-    BeatSpring,
-    easeInCubic,
-    easeOutCubic,
-    PlopSpring,
-    SmoothSpring,
-    spring,
-    SwingSpring
-} from "@motion-canvas/core/lib/tweening";
+import {easeInCubic, easeOutCubic, SmoothSpring, spring} from "@motion-canvas/core/lib/tweening";
 import {createSignal} from "@motion-canvas/core/lib/signals";
-import {slideTransition} from "@motion-canvas/core/lib/transitions";
-import {Direction} from "@motion-canvas/core/lib/types";
 
 export default makeScene2D(function* (view) {
 
