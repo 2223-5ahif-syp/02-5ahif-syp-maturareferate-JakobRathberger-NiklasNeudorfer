@@ -255,8 +255,9 @@ export default makeScene2D(function* (view) {
                     stroke={ColorPalette.yellow}
                     ref={boundingBox1}
                     lineWidth={17}
-                    nodes={buildText()}
-                    opacity={0}
+                    sharpness={2}
+                    nodes={[buildSquare(), testText()]}
+                    start={0.5} end={0.5}
                     buffer={20}
                 />
             </>
@@ -270,10 +271,10 @@ export default makeScene2D(function* (view) {
                 <Brace
                     stroke={ColorPalette.pink}
                     ref={boundingBox2}
-                    sharpness={0}
+                    sharpness={2.5}
                     lineWidth={17}
-                    nodes={buildText()}
-                    opacity={0}
+                    nodes={[buildSquare(), stageText()]}
+                    start={0.5} end={0.5}
                     buffer={190}
                 />
             </>
@@ -286,11 +287,11 @@ export default makeScene2D(function* (view) {
                 <Brace
                     stroke={ColorPalette.blue}
                     ref={boundingBox3}
-                    sharpness={0}
+                    sharpness={3}
                     zIndex={100}
                     lineWidth={17}
-                    nodes={buildText()}
-                    opacity={0}
+                    nodes={[buildSquare(), productionText()]}
+                    start={0.5} end={0.5}
                     buffer={350}
                 />
             </>
@@ -302,21 +303,18 @@ export default makeScene2D(function* (view) {
         sequence(
             1.5,
             all(
-                boundingBox1().opacity(1, 1),
-                boundingBox1().sharpness(2, 2),
-                boundingBox1().nodes([buildSquare(), testText()], 2),
+                boundingBox1().start(0, 1),
+                boundingBox1().end(1, 1),
                 integText().text("Continuous Integration", 2)
             ),
             all(
-                boundingBox2().opacity(1, 1),
-                boundingBox2().sharpness(2.5, 2),
-                boundingBox2().nodes([buildSquare(), stageText()], 2),
+                boundingBox2().start(0, 1),
+                boundingBox2().end(1, 1),
                 delivText().text("Continuous Delivery", 2)
             ),
             all(
-                boundingBox3().opacity(1, 1),
-                boundingBox3().sharpness(3, 2),
-                boundingBox3().nodes([buildSquare(), productionText()], 2),
+                boundingBox3().start(0, 1),
+                boundingBox3().end(1, 1),
                 deployText().text("Continuous Deployment", 2)
             )
         )
